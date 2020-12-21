@@ -1,4 +1,6 @@
-public class Sales {
+import java.io.Serializable;
+
+public class Sales implements Serializable {
     private Product product;
     private int discount;
     private String dateStart;

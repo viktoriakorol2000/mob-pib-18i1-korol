@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shop {
+public class Shop implements Serializable {
     private List<Order> orders = new ArrayList<>();
     private List<Sales> sales = new ArrayList<>();
 
