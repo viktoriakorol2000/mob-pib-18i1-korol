@@ -41,6 +41,7 @@ public class Main {
             for (Order order : shop.getOrders()) {
                 System.out.println("Заказ: " + order);
             }
+            ShopD.writeShop(shop);
         }
     }
 }
