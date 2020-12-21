@@ -1,4 +1,6 @@
-public class Consumer {
+import java.io.Serializable;
+
+public class Consumer implements Serializable {
     private String name;
     private String surname;
     private String phoneNumber;
