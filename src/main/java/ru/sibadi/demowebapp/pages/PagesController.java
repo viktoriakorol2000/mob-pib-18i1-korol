@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.sibadi.demowebapp.domain.Payment;
 import ru.sibadi.demowebapp.domain.Person;
+import ru.sibadi.demowebapp.repository.PaymentRepository;
 import ru.sibadi.demowebapp.repository.PersonRepository;
 
 import java.time.LocalDate;
@@ -19,17 +20,22 @@ public class PagesController {
 
     private final Random rnd = new Random();
     private final PersonRepository personRepository;
+    private final PaymentRepository paymentRepository;
 
-    public PagesController(PersonRepository personRepository) {
+    public PagesController(PersonRepository personRepository, PaymentRepository paymentRepository) {
         this.personRepository = personRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("persons", personRepository.findAllPersons());
+        model.addAttribute("persons", personRepository.findAll());
         return "index";
     }
-
+    @GetMapping("/person-add")
+    public String personAdd(){
+        return "person-add";
+    }
     @GetMapping("/person/{id}")
     public String personPage(
             @PathVariable("id") int id,
@@ -68,8 +74,10 @@ public class PagesController {
     ){
 
         Payment payment = new Payment(LocalDate.parse(date), insSalary);
+        paymentRepository.save(payment);
         Person person = personRepository.findPersonById(id);
         person.addPayment(payment);
+        personRepository.save(person);
         return "redirect:/person/" + id + "/payment";
     }
 
@@ -84,5 +92,18 @@ public class PagesController {
         person.setName(name);
         person.setSalary(salary);
         return "redirect:/person/" + id;
+    }
+
+    @PostMapping("/person")
+    public String createPerson(
+            @RequestParam("name") String name,
+            @RequestParam("salary") int salary
+
+    ){
+        Person person = new Person();
+        person.setName(name);
+        person.setSalary(salary);
+        personRepository.save(person);
+        return "redirect:/";
     }
 }
